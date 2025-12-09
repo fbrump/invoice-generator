@@ -40,8 +40,12 @@ async fn get_transactions() -> Json<Vec<TransactionDto>> {
 }
 
 #[handler]
-async fn get_transactions_by_id(id: Path<u32>) -> String {
-    format!("Get one transaction {}", id.to_string())
+async fn get_transactions_by_id(id: Path<u32>) -> Json<TransactionDto> {
+    let id_parameter = *id;
+    let result_item = db_transactions()
+        .into_iter()
+        .find(|item| item.id == id_parameter);
+    Json(result_item.expect("Error when trying to get one Item"))
 }
 
 #[tokio::main]

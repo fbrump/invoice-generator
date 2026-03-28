@@ -6,3 +6,11 @@ In this repository I want to share my knowledge and study around Rust with a rea
 
 - [Rust](https://rust-lang.org/)
 - [Axum](https://docs.rs/axum/latest/axum/)
+
+# How To
+
+For local development, we can use this command below:
+
+```bash
+cargo watch -x run
+``` 

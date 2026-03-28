@@ -5,6 +5,10 @@ use tower_http::trace::TraceLayer;
 use tracing::info;
 use tracing_subscriber::EnvFilter;
 
+use crate::server::handler::get_transctions;
+
+mod server;
+
 #[tokio::main]
 async fn main() {
     // 1. Initialize tracing + log bridging
@@ -20,7 +24,10 @@ async fn main() {
         .init();
 
     // app
-    let router_api = Router::new().route("/monitoring/health", get(|| async { "OK" }));
+    let router_api = Router::new()
+        .route("/monitoring/health", get(|| async { "OK" }))
+        .route("/transactions/", get(get_transctions));
+
     let app = Router::new()
         .route(
             "/",

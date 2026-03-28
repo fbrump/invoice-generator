@@ -5,7 +5,7 @@ use tower_http::trace::TraceLayer;
 use tracing::info;
 use tracing_subscriber::EnvFilter;
 
-use crate::server::handler::get_transctions;
+use crate::server::handler::{get_transctions, get_transctions_by};
 
 mod server;
 
@@ -26,7 +26,8 @@ async fn main() {
     // app
     let router_api = Router::new()
         .route("/monitoring/health", get(|| async { "OK" }))
-        .route("/transactions/", get(get_transctions));
+        .route("/transactions/", get(get_transctions))
+        .route("/transactions/{id}", get(get_transctions_by));
 
     let app = Router::new()
         .route(

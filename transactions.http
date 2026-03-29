@@ -1,0 +1,24 @@
+@baseUrl = http://localhost:3000 
+
+# Get all transactions
+GET {{baseUrl}}/api/transactions/ HTTP/1.1
+Content-Length: application/json
+
+
+### Get one transaction by ID e.g. 74526606-4305-4388-92a3-f4cf2c203e6b
+
+GET {{baseUrl}}/api/transactions/6bc8ed59-96bc-4885-8839-4e234462cf05
+Content-Length: application/json
+
+### Insert a new transaction
+# @name post_test_api
+POST {{baseUrl}}/api/transactions/
+Content-Length: application/json
+
+{
+    "description": "Pepsi",
+    "merchant_name": "Target",
+    "value": 1.5,
+    "currency": "DOLLAR",
+    "date_time": "2026-03-30T20:52:35.063703517Z"
+}

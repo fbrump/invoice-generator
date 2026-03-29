@@ -14,3 +14,9 @@ For local development, we can use this command below:
 ```bash
 cargo watch -x run
 ``` 
+
+## Endpoint Tests
+
+Using the [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client&ssr=false#overview) on the VS Code we can execute some endpoint tests.
+
+- transactions.http

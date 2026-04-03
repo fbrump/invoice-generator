@@ -6,7 +6,9 @@ edition = "2021"
 [dependencies]
 axum = { version = "0.8.8", features = ["macros"] }
 chrono = { version = "0.4.44", features = ["serde"] }
+dotenv = "0.15.0"
 serde = { version = "1.0.228", features = ["derive"] }
+sqlx = { version = "0.8.6", features = ["runtime-tokio-native-tls", "json", "postgres", "uuid", "chrono" ] }
 tokio = { version = "1.50.0", features = ["macros", "rt-multi-thread"] }
 tower = "0.5.3"
 tower-http = { version = "0.6.8", features = ["trace"] }

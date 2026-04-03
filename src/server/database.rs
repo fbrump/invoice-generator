@@ -1,4 +1,4 @@
-use crate::server::model::{CurrencyEnum, Transaction};
+use crate::server::models::transaction::{CurrencyEnum, Transaction};
 use chrono::Utc;
 use uuid::uuid;
 

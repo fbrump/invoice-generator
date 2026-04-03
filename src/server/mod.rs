@@ -1,3 +1,4 @@
 pub mod database;
 pub mod handler;
-pub mod model;
+mod models;
+pub mod serializes;

@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use sqlx::types::Uuid;
 
 #[derive(Debug, sqlx::Type, Clone, Copy, Serialize, Deserialize)]
-#[sqlx(type_name = "currency")]
+#[sqlx(type_name = "VARCHAR")]
 #[sqlx(rename_all = "lowercase")]
 pub enum CurrencyEnum {
     UNDEFINED,
@@ -21,7 +21,7 @@ impl From<String> for CurrencyEnum {
     }
 }
 
-#[derive(Debug, sqlx::FromRow, Clone, Serialize)]
+#[derive(Debug, sqlx::FromRow, Clone, Serialize, Deserialize)]
 pub struct Transaction {
     pub id: Uuid,
     pub description: String,

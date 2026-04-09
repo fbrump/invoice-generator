@@ -10,7 +10,7 @@ pub struct CreateTransactionPayload {
     pub merchant_name: String,
     pub value: f32,
     pub currency: CurrencyEnum,
-    pub date_time: DateTime<Utc>,
+    pub created_at: DateTime<Utc>,
 }
 
 impl CreateTransactionPayload {
@@ -21,7 +21,7 @@ impl CreateTransactionPayload {
             self.merchant_name.clone(),
             self.value,
             self.currency,
-            self.date_time,
+            self.created_at,
         )
     }
 }

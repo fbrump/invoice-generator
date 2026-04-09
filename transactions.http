@@ -12,13 +12,28 @@ Content-Length: application/json
 
 ### Insert a new transaction
 # @name post_test_api
-POST {{baseUrl}}/api/transactions/
-Content-Length: application/json
+POST {{baseUrl}}/api/transactions/ HTTP/1.1
+Content-Type: application/json
+Content-Length: 146
 
 {
-    "description": "Pepsi",
-    "merchant_name": "Target",
-    "value": 1.5,
-    "currency": "DOLLAR",
-    "date_time": "2026-03-30T20:52:35.063703517Z"
+  "description": "Pepsi",
+  "merchant_name": "Target",
+  "value": 1.5,
+  "currency": "DOLLAR",
+  "created_at": "2026-03-30T20:52:35.063703517Z"
+}
+
+### Insert a new transaction (EURO)
+# @name post_test_api
+POST {{baseUrl}}/api/transactions/ HTTP/1.1
+Content-Type: application/json
+Content-Length: 146
+
+{
+  "description": "Coke",
+  "merchant_name": "Wallmart",
+  "value": 30.03,
+  "currency": "EURO",
+  "created_at": "2026-03-30T20:52:35.063703517Z"
 }

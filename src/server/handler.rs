@@ -2,11 +2,8 @@ use crate::server::errors::AppError;
 use crate::server::models::transaction::Transaction;
 use crate::server::serializes::CreateTransactionPayload;
 use axum::extract::{Json, Path};
-use axum::http::StatusCode;
-use axum::response::IntoResponse;
 use axum::Extension;
 use sqlx::PgPool;
-use tracing::{debug, info};
 use uuid::Uuid;
 
 pub async fn get_transctions(Extension(pool): Extension<PgPool>) -> Json<Vec<Transaction>> {
@@ -40,10 +37,33 @@ pub async fn get_transctions_by(
     }
 }
 
-pub async fn insert_transction(Json(payload): Json<CreateTransactionPayload>) -> impl IntoResponse {
-    debug!("Entered in the handle");
+pub async fn insert_transction(
+    Extension(pool): Extension<PgPool>,
+    Json(payload): Json<CreateTransactionPayload>,
+) -> Result<Json<Uuid>, AppError> {
     let id = Uuid::new_v4();
-    let _ = payload.to_model(id);
-    info!("Entered in the handle");
-    (StatusCode::CREATED, Json(id))
+    let transaction = payload.to_model(id);
+    let query_str = r#"
+        INSERT INTO transactions 
+        (id, description, merchant_name, value, currency, created_at)
+        VALUES
+        ($1,$2,$3,$4,$5,$6) 
+        RETURNING id;
+    "#;
+    println!("{}", query_str);
+    println!("{:?}", transaction);
+    let result_item = sqlx::query_scalar::<_, Uuid>(query_str)
+        .bind(&transaction.id)
+        .bind(&transaction.description)
+        .bind(&transaction.merchant_name)
+        .bind(&transaction.value)
+        .bind(&transaction.currency)
+        .bind(&transaction.created_at)
+        .fetch_one(&pool)
+        .await;
+
+    match result_item {
+        Ok(item_id) => Ok(Json(item_id)),
+        Err(_) => Err(AppError::BadRequest),
+    }
 }

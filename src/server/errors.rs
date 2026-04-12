@@ -5,7 +5,7 @@ use axum::{http::StatusCode, response::IntoResponse};
 #[derive(Debug)]
 pub enum AppError {
     // NotFound,
-    // InternalServerError,
+    InternalServerError,
     BadRequest,
 }
 
@@ -19,10 +19,10 @@ impl IntoResponse for AppError {
     fn into_response(self) -> axum::response::Response {
         let (status, body) = match self {
             // AppError::NotFound => (StatusCode::NOT_FOUND, "Not Found".to_string()),
-            // AppError::InternalServerError => (
-            //     StatusCode::INTERNAL_SERVER_ERROR,
-            //     "Internal Server Error".to_string(),
-            // ),
+            AppError::InternalServerError => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "Internal Server Error".to_string(),
+            ),
             AppError::BadRequest => (StatusCode::BAD_REQUEST, "Bad request".to_string()),
         };
         (status, body).into_response()

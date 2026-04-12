@@ -2,10 +2,11 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::types::Uuid;
 
-#[derive(Debug, sqlx::Type, Clone, Copy, Serialize, Deserialize)]
+#[derive(Debug, sqlx::Type, Clone, Copy, Serialize, Deserialize, Default)]
 #[sqlx(type_name = "VARCHAR")]
 #[sqlx(rename_all = "lowercase")]
 pub enum CurrencyEnum {
+    #[default]
     UNDEFINED,
     EURO,
     DOLLAR,
@@ -21,7 +22,7 @@ impl From<String> for CurrencyEnum {
     }
 }
 
-#[derive(Debug, sqlx::FromRow, Clone, Serialize, Deserialize)]
+#[derive(Debug, sqlx::FromRow, Clone, Serialize, Deserialize, Default)]
 pub struct Transaction {
     pub id: Uuid,
     pub description: String,

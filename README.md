@@ -7,6 +7,7 @@ In this repository I want to share my knowledge and study around Rust with a rea
 - [Rust](https://rust-lang.org/)
 - [Axum](https://docs.rs/axum/latest/axum/)
 - [SQLx](https://docs.rs/sqlx/latest/sqlx/)
+- [SQLx-paginated](https://crates.io/crates/sqlx-paginated)
 - [PostgreSQL](https://www.postgresql.org/)
 - [Podman](https://podman.io/)
 

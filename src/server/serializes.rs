@@ -64,3 +64,32 @@ impl PaginatedTransactionResponse {
         }
     }
 }
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum ReportTypeEnum {
+    CSV = 1,
+}
+
+#[derive(Debug, Serialize)]
+pub struct ReportDataResponse {
+    report_type: ReportTypeEnum,
+    report_id: Uuid,
+    file_name: String,
+    path: String,
+}
+
+impl ReportDataResponse {
+    pub fn new(
+        report_type: ReportTypeEnum,
+        report_id: Uuid,
+        file_name: String,
+        path: String,
+    ) -> Self {
+        Self {
+            report_type,
+            report_id,
+            file_name,
+            path,
+        }
+    }
+}

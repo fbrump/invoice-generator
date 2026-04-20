@@ -1,10 +1,14 @@
+use std::fs::write;
+
 use crate::server::errors::AppError;
 use crate::server::models::transaction::Transaction;
 use crate::server::serializes::{
-    CreateTransactionPayload, PaginatedTransactionResponse, PaginationInfo,
+    CreateTransactionPayload, PaginatedTransactionResponse, PaginationInfo, ReportDataResponse,
+    ReportTypeEnum,
 };
 use axum::extract::{Json, Path, Query};
 use axum::Extension;
+use csv::Writer;
 use sqlx::{PgPool, Postgres};
 use sqlx_paginated::{paginated_query_as, FlatQueryParams, QueryParamsBuilder, QuerySortDirection};
 use uuid::Uuid;
@@ -90,4 +94,61 @@ pub async fn insert_transction(
         Ok(item_id) => Ok(Json(item_id)),
         Err(_) => Err(AppError::BadRequest),
     }
+}
+
+pub async fn get_transactions_report(
+    Extension(pool): Extension<PgPool>,
+    report_type: Path<ReportTypeEnum>,
+) -> Result<Json<ReportDataResponse>, AppError> {
+    // Retrieve data to memory
+    const BASE_QUERY_STR: &str = r#"
+        SELECT * 
+        FROM transactions 
+    "#;
+    let result_items = sqlx::query_as::<_, Transaction>(BASE_QUERY_STR)
+        .fetch_all(&pool)
+        .await
+        .unwrap();
+    let report_id = Uuid::new_v4();
+    let file_name = format!("transactions-{report_id}");
+    let path: &str = "/tmp/";
+    let report_results = ReportDataResponse::new(
+        report_type.0,
+        report_id,
+        file_name.to_string(),
+        path.to_string(),
+    );
+
+    let create_file_result = match report_type.0 {
+        ReportTypeEnum::CSV => create_csv(result_items, &file_name, path),
+    };
+
+    match create_file_result {
+        Ok(_) => Ok(Json(report_results)),
+        Err(_) => todo!(),
+    }
+    
+}
+
+fn create_csv(items: Vec<Transaction>, file_name: &str, path: &str) -> Result<(), Box<dyn std::error::Error>> {
+    let csv_writer = Writer::from_path(format!("{}{}.csv", path, file_name));
+    println!("{}", items.len());
+    match csv_writer {
+        Ok(mut file) => {
+            // header
+            file.write_record(&["id", "merchant", "value"]).unwrap();
+            // rows
+            for item in items {
+                file.write_record(&[
+                    item.id.to_string(),
+                    item.merchant_name,
+                    item.value.to_string(),
+                ])
+                .unwrap();
+            }
+            let _ = file.flush();
+        }
+        Err(_) => todo!(),
+    };
+    Ok(())
 }

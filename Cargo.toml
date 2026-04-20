@@ -6,6 +6,7 @@ edition = "2021"
 [dependencies]
 axum = { version = "0.8.8", features = ["macros"] }
 chrono = { version = "0.4.44", features = ["serde"] }
+csv = "1.4.0"
 dotenv = "0.15.0"
 serde = { version = "1.0.228", features = ["derive"] }
 sqlx = { version = "0.8.6", features = ["runtime-tokio-native-tls", "json", "postgres", "uuid", "chrono" ] }

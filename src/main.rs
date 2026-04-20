@@ -6,7 +6,9 @@ use tracing_subscriber::EnvFilter;
 
 use crate::{
     config::Config,
-    server::handler::{get_transctions, get_transctions_by, insert_transction},
+    server::handler::{
+        get_transactions_report, get_transctions, get_transctions_by, insert_transction,
+    },
 };
 
 mod config;
@@ -50,7 +52,8 @@ async fn main() {
             "/transactions/",
             get(get_transctions).post(insert_transction),
         )
-        .route("/transactions/{id}", get(get_transctions_by));
+        .route("/transactions/{id}", get(get_transctions_by))
+        .route("/reports/{report_type}", get(get_transactions_report));
 
     let app = Router::new()
         .route(

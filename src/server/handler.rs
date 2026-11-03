@@ -1,5 +1,3 @@
-use std::fs::write;
-
 use crate::server::errors::AppError;
 use crate::server::models::transaction::Transaction;
 use crate::server::serializes::{
@@ -9,9 +7,11 @@ use crate::server::serializes::{
 use axum::extract::{Json, Path, Query};
 use axum::Extension;
 use csv::Writer;
+use rust_xlsxwriter::workbook::Workbook;
 use sqlx::{PgPool, Postgres};
 use sqlx_paginated::{paginated_query_as, FlatQueryParams, QueryParamsBuilder, QuerySortDirection};
 use uuid::Uuid;
+// use xls_rs::{RowData, WriteOptions, XlsxWriter};
 
 pub async fn get_transctions(
     Extension(pool): Extension<PgPool>,
@@ -121,6 +121,7 @@ pub async fn get_transactions_report(
 
     let create_file_result = match report_type.0 {
         ReportTypeEnum::CSV => create_csv(result_items, &file_name, path),
+        ReportTypeEnum::XLS => create_xls(result_items, &file_name, path),
     };
 
     match create_file_result {
@@ -153,5 +154,55 @@ fn create_csv(
         }
         Err(_) => todo!(),
     };
+    Ok(())
+}
+
+fn create_xls(
+    items: Vec<Transaction>,
+    file_name: &str,
+    path: &str,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let mut workbook = Workbook::new();
+    let worksheet = workbook.add_worksheet();
+    println!("{}", items.len());
+
+    // header
+    let header_row = 0;
+    match worksheet.write(header_row, 0, "id") {
+        Ok(_) => println!("Header ID wrote with success"),
+        Err(_) => { todo!() }
+    }
+    match worksheet.write(header_row, 1, "merchant") {
+        Ok(_) => println!("Header merchant wrote with success"),
+        Err(_) => { todo!() }
+    }
+    match worksheet.write(header_row, 2, "value"){
+        Ok(_) => println!("Header value wrote with success"),
+        Err(_) => { todo!() }
+    }
+
+    // rows
+    for (i, item) in items.iter().enumerate(){
+        let row_index: u32 = (i+1).try_into().unwrap();
+        match worksheet.write(row_index, 0, item.id.to_string()) {
+            Ok(_) => println!("Row ID wrote with success"),
+            Err(_) => { todo!() }
+        }
+        match worksheet.write(row_index, 1, &item.merchant_name) {
+            Ok(_) => println!("Row merchant wrote with success"),
+            Err(_) => { todo!() }
+        }
+        match worksheet.write(row_index, 2, item.value.to_string()) {
+            Ok(_) => println!("Row value wrote with success"),
+            Err(_) => { todo!() }
+        }
+    }
+    // save
+    let full_path = format!("{}{}.xlsx", path, file_name);
+    match workbook.save(full_path){
+        Ok(_) => println!("File generated with success"),
+        Err(_) => todo!(),
+    }
+
     Ok(())
 }

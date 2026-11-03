@@ -49,7 +49,7 @@ async fn main() {
     let router_api = Router::new()
         .route("/monitoring/health", get(|| async { "OK" }))
         .route(
-            "/transactions/",
+            "/transactions",
             get(get_transctions).post(insert_transction),
         )
         .route("/transactions/{id}", get(get_transctions_by))

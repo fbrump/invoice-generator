@@ -10,6 +10,8 @@ In this repository I want to share my knowledge and study around Rust with a rea
 - [SQLx-paginated](https://crates.io/crates/sqlx-paginated)
 - [PostgreSQL](https://www.postgresql.org/)
 - [Podman](https://podman.io/)
+- [CSV](https://docs.rs/csv/latest/csv/)
+- [rust_xlsxwriter](https://docs.rs/rust_xlsxwriter/latest/rust_xlsxwriter/)
 
 # How To
 

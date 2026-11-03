@@ -65,9 +65,10 @@ impl PaginatedTransactionResponse {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 pub enum ReportTypeEnum {
     CSV = 1,
+    XLS = 2,
 }
 
 #[derive(Debug, Serialize)]

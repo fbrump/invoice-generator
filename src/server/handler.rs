@@ -127,10 +127,13 @@ pub async fn get_transactions_report(
         Ok(_) => Ok(Json(report_results)),
         Err(_) => todo!(),
     }
-    
 }
 
-fn create_csv(items: Vec<Transaction>, file_name: &str, path: &str) -> Result<(), Box<dyn std::error::Error>> {
+fn create_csv(
+    items: Vec<Transaction>,
+    file_name: &str,
+    path: &str,
+) -> Result<(), Box<dyn std::error::Error>> {
     let csv_writer = Writer::from_path(format!("{}{}.csv", path, file_name));
     println!("{}", items.len());
     match csv_writer {

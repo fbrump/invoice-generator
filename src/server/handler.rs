@@ -11,7 +11,6 @@ use rust_xlsxwriter::workbook::Workbook;
 use sqlx::{PgPool, Postgres};
 use sqlx_paginated::{paginated_query_as, FlatQueryParams, QueryParamsBuilder, QuerySortDirection};
 use uuid::Uuid;
-// use xls_rs::{RowData, WriteOptions, XlsxWriter};
 
 pub async fn get_transctions(
     Extension(pool): Extension<PgPool>,

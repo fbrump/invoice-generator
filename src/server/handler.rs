@@ -169,36 +169,48 @@ fn create_xls(
     let header_row = 0;
     match worksheet.write(header_row, 0, "id") {
         Ok(_) => println!("Header ID wrote with success"),
-        Err(_) => { todo!() }
+        Err(_) => {
+            todo!()
+        }
     }
     match worksheet.write(header_row, 1, "merchant") {
         Ok(_) => println!("Header merchant wrote with success"),
-        Err(_) => { todo!() }
+        Err(_) => {
+            todo!()
+        }
     }
-    match worksheet.write(header_row, 2, "value"){
+    match worksheet.write(header_row, 2, "value") {
         Ok(_) => println!("Header value wrote with success"),
-        Err(_) => { todo!() }
+        Err(_) => {
+            todo!()
+        }
     }
 
     // rows
-    for (i, item) in items.iter().enumerate(){
-        let row_index: u32 = (i+1).try_into().unwrap();
+    for (i, item) in items.iter().enumerate() {
+        let row_index: u32 = (i + 1).try_into().unwrap();
         match worksheet.write(row_index, 0, item.id.to_string()) {
             Ok(_) => println!("Row ID wrote with success"),
-            Err(_) => { todo!() }
+            Err(_) => {
+                todo!()
+            }
         }
         match worksheet.write(row_index, 1, &item.merchant_name) {
             Ok(_) => println!("Row merchant wrote with success"),
-            Err(_) => { todo!() }
+            Err(_) => {
+                todo!()
+            }
         }
         match worksheet.write(row_index, 2, item.value.to_string()) {
             Ok(_) => println!("Row value wrote with success"),
-            Err(_) => { todo!() }
+            Err(_) => {
+                todo!()
+            }
         }
     }
     // save
     let full_path = format!("{}{}.xlsx", path, file_name);
-    match workbook.save(full_path){
+    match workbook.save(full_path) {
         Ok(_) => println!("File generated with success"),
         Err(_) => todo!(),
     }

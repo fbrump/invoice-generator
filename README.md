@@ -12,6 +12,11 @@ In this repository I want to share my knowledge and study around Rust with a rea
 - [Podman](https://podman.io/)
 - [CSV](https://docs.rs/csv/latest/csv/)
 - [rust_xlsxwriter](https://docs.rs/rust_xlsxwriter/latest/rust_xlsxwriter/)
+- [utoipa](https://crates.io/crates/utoipa)
+- [utoipa redoc](https://crates.io/crates/utoipa_redoc)
+- [utoipa scalar](https://crates.io/crates/utoipa_scalar)
+- [utoipa swagger UI](https://crates.io/crates/utoipa_swagger_ui)
+- [utoipa axum](https://crates.io/crates/utoipa_axum)
 
 # How To
 
@@ -95,4 +100,9 @@ After to connect on the server, go to Databases -> app_db -> Schemas -> public -
 - _sqlx_migrations -> Responsible to keep the migration history
 - transactions
 
-**TBD**
+# API Documentation
+
+There are couple of options to see the API documentation:
+- http://localhost:3000/docs/swagger
+- http://localhost:3000/docs/redoc
+- http://localhost:3000/docs/scalar

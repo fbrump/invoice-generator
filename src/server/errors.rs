@@ -5,8 +5,8 @@ use axum::{http::StatusCode, response::IntoResponse};
 #[derive(Debug)]
 pub enum AppError {
     // NotFound,
-    InternalServerError,
-    BadRequest,
+    InternalServerError = 0,
+    BadRequest = 1,
 }
 
 impl fmt::Display for AppError {

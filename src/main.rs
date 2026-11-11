@@ -1,15 +1,12 @@
-use axum::{routing::get, Extension, Router};
-use sqlx::postgres::PgPoolOptions;
-use tower_http::trace::TraceLayer;
-use tracing::info;
-use tracing_subscriber::EnvFilter;
-
 use crate::{
-    config::Config,
-    server::handler::{
-        get_transactions_report, get_transctions, get_transctions_by, insert_transction,
+    config::{configure_database, Config},
+    server::{
+        api_docs::{configure_redoc, configure_scalar, configure_swagger},
+        routes,
     },
 };
+use tracing::info;
+use tracing_subscriber::EnvFilter;
 
 mod config;
 mod server;
@@ -39,41 +36,28 @@ async fn main() {
         .init();
 
     // database
-    let pool = PgPoolOptions::new()
-        .max_connections(15)
-        .connect(&config.database_url)
-        .await
-        .expect("Database not connected");
+    let pool = configure_database(config.database_url).await;
 
     // app
-    let router_api = Router::new()
-        .route("/monitoring/health", get(|| async { "OK" }))
-        .route(
-            "/transactions",
-            get(get_transctions).post(insert_transction),
-        )
-        .route("/transactions/{id}", get(get_transctions_by))
-        .route("/reports/{report_type}", get(get_transactions_report));
+    // let app_routers = configure_routers();
+    let app_routers = routes::configure_routers();
 
-    let app = Router::new()
-        .route(
-            "/",
-            get(|| async {
-                info!("Root endpoint was called");
-                "Welcome to Invoice Generator API"
-            }),
-        )
-        .nest("/api", router_api)
-        .layer(Extension(pool))
-        .layer(TraceLayer::new_for_http());
+    // let app = configure_app();
+    let (router, api) = routes::configure_app(app_routers, pool);
+
+    // Configure Documentation
+    let router = router.merge(configure_swagger(api.clone()));
+    let router = router.merge(configure_redoc(api.clone()));
+    let router = router.merge(configure_scalar(api));
 
     info!("Starting server on {}", config.server_address);
     println!("Starting server on {}", config.server_address);
+
     // run app
     let listener = tokio::net::TcpListener::bind(config.server_address)
         .await
         .unwrap();
 
     // run it
-    let _ = axum::serve(listener, app).await;
+    let _ = axum::serve(listener, router).await;
 }

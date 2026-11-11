@@ -12,13 +12,25 @@ use sqlx::{PgPool, Postgres};
 use sqlx_paginated::{paginated_query_as, FlatQueryParams, QueryParamsBuilder, QuerySortDirection};
 use uuid::Uuid;
 
+#[utoipa::path(
+    method(get, head),
+    path = "/transactions",
+    responses(
+        (status = OK, body=PaginatedTransactionResponse, description = "Retrieve all transactions")
+    ),
+    params(
+        ("page" = Option<i64>, Query, description = "Page number" ),
+        ("page_size" = Option<i64>, Query, description = "Total items per page" ),
+    ),
+    tag = "transactions"
+)]
 pub async fn get_transctions(
     Extension(pool): Extension<PgPool>,
     params: Query<FlatQueryParams>,
 ) -> Result<Json<PaginatedTransactionResponse>, AppError> {
     const BASE_TRANSACTION_QUERY: &str = r#"
-        SELECT * 
-        FROM transactions 
+        SELECT *
+        FROM transactions
     "#;
     let paginator = params.pagination.clone().unwrap();
     let parameters = QueryParamsBuilder::<Transaction>::new()
@@ -45,13 +57,22 @@ pub async fn get_transctions(
     }
 }
 
+#[utoipa::path(
+    method(get,head),
+    path = "/transactions/{id}",
+    responses(
+        (status = OK, body=Transaction, description = "Retrieve a transaction"),
+        (status = BAD_REQUEST, description = "Transaction not found")
+    ),
+    tag = "transactions"
+)]
 pub async fn get_transctions_by(
     Extension(pool): Extension<PgPool>,
     id: Path<Uuid>,
 ) -> Result<Json<Transaction>, AppError> {
     const BASE_QUERY_STR: &str = r#"
-        SELECT * 
-        FROM transactions 
+        SELECT *
+        FROM transactions
         WHERE id= $1
     "#;
     let result_item = sqlx::query_as::<_, Transaction>(BASE_QUERY_STR)
@@ -64,6 +85,14 @@ pub async fn get_transctions_by(
     }
 }
 
+#[utoipa::path(
+    post,
+    path = "/transactions",
+    responses(
+        (status = OK, body=Uuid, description = "Insert a new transaction")
+    ),
+    tag = "transactions"
+)]
 pub async fn insert_transction(
     Extension(pool): Extension<PgPool>,
     Json(payload): Json<CreateTransactionPayload>,
@@ -71,10 +100,10 @@ pub async fn insert_transction(
     let id = Uuid::new_v4();
     let transaction = payload.to_model(id);
     const BASE_QUERY_STR: &str = r#"
-        INSERT INTO transactions 
+        INSERT INTO transactions
         (id, description, merchant_name, value, currency, created_at)
         VALUES
-        ($1,$2,$3,$4,$5,$6) 
+        ($1,$2,$3,$4,$5,$6)
         RETURNING id;
     "#;
     println!("{}", BASE_QUERY_STR);
@@ -95,14 +124,25 @@ pub async fn insert_transction(
     }
 }
 
+#[utoipa::path(
+    method(get, head),
+    path = "/reports/{report_type}",
+    responses(
+        (status = OK, body=ReportDataResponse, description = "Generate report by type")
+    ),
+    params(
+        ("report_type" = ReportTypeEnum, Query, description = "Report Type Enum" )
+    ),
+    tag = "reports"
+)]
 pub async fn get_transactions_report(
     Extension(pool): Extension<PgPool>,
     report_type: Path<ReportTypeEnum>,
 ) -> Result<Json<ReportDataResponse>, AppError> {
     // Retrieve data to memory
     const BASE_QUERY_STR: &str = r#"
-        SELECT * 
-        FROM transactions 
+        SELECT *
+        FROM transactions
     "#;
     let result_items = sqlx::query_as::<_, Transaction>(BASE_QUERY_STR)
         .fetch_all(&pool)

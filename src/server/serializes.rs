@@ -1,10 +1,11 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 use uuid::Uuid;
 
 use crate::server::models::transaction::{CurrencyEnum, Transaction};
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct CreateTransactionPayload {
     pub description: String,
     pub merchant_name: String,
@@ -26,7 +27,7 @@ impl CreateTransactionPayload {
     }
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, ToSchema)]
 pub struct PaginationInfo {
     page: i64,
     page_size: i64,
@@ -50,7 +51,7 @@ impl PaginationInfo {
     }
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, ToSchema)]
 pub struct PaginatedTransactionResponse {
     transactions: Vec<Transaction>,
     pagination: PaginationInfo,
@@ -65,13 +66,13 @@ impl PaginatedTransactionResponse {
     }
 }
 
-#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, ToSchema)]
 pub enum ReportTypeEnum {
     CSV = 1,
     XLS = 2,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, ToSchema)]
 pub struct ReportDataResponse {
     report_type: ReportTypeEnum,
     report_id: Uuid,

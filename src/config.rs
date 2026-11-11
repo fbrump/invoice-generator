@@ -20,3 +20,17 @@ impl Config {
         })
     }
 }
+
+mod database {
+    use sqlx::{postgres::PgPoolOptions, Pool, Postgres};
+
+    pub async fn configure_database(database_url: String) -> Pool<Postgres> {
+        PgPoolOptions::new()
+            .max_connections(15)
+            .connect(database_url.as_str())
+            .await
+            .expect("Database not connected")
+    }
+}
+
+pub use database::configure_database;

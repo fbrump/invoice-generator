@@ -22,8 +22,8 @@ impl ReportFactory for GenerateReportFactory {
         transactions: Vec<Transaction>,
     ) -> Result<ReportDataResponse, &'static str> {
         match report_type {
-            ReportTypeEnum::CSV => Ok(GenerateCsv::new().create(transactions).unwrap()),
-            ReportTypeEnum::XLS => Ok(GenerateXls::new().create(transactions).unwrap()),
+            ReportTypeEnum::CSV => GenerateCsv::new().create(transactions),
+            ReportTypeEnum::XLS => GenerateXls::new().create(transactions),
             _ => Err("There is no handled format"),
         }
     }

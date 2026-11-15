@@ -74,7 +74,7 @@ impl CreateReport for GenerateXls {
         // save
         let report_id = Uuid::new_v4();
         let file_name = self.generate_report.generate_file_name(Some(report_id));
-        let full_path = format!("{}{file_name}", "/tmp/".to_string());
+        let full_path = format!("{}{file_name}", Self::BASE_PATH.to_string());
 
         match workbook.save(&full_path) {
             Ok(_) => Ok(ReportDataResponse::new(

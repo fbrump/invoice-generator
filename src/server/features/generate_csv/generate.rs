@@ -24,7 +24,7 @@ impl CreateReport for GenerateCsv {
         let report_id = Uuid::new_v4();
         let file_name = self.generate_report.generate_file_name(Some(report_id));
 
-        let full_path = format!("{}{file_name}", "/tmp/".to_string());
+        let full_path = format!("{}{file_name}", Self::BASE_PATH.to_string());
         let csv_writer = Writer::from_path(&full_path);
 
         match csv_writer {

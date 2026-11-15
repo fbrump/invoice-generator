@@ -70,6 +70,7 @@ impl PaginatedTransactionResponse {
 pub enum ReportTypeEnum {
     CSV = 1,
     XLS = 2,
+    PDF = 3,
 }
 
 #[derive(Debug, Serialize, ToSchema)]

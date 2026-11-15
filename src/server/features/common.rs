@@ -1,7 +1,10 @@
 use uuid::Uuid;
 
 use crate::server::{
-    features::{generate_csv::generate::GenerateCsv, generate_excel::generate::GenerateXls},
+    features::{
+        generate_csv::generate::GenerateCsv, generate_excel::generate::GenerateXls,
+        generate_pdf::generate::GeneratePdf,
+    },
     models::transaction::Transaction,
     serializes::{ReportDataResponse, ReportTypeEnum},
 };
@@ -24,12 +27,14 @@ impl ReportFactory for GenerateReportFactory {
         match report_type {
             ReportTypeEnum::CSV => GenerateCsv::new().create(transactions),
             ReportTypeEnum::XLS => GenerateXls::new().create(transactions),
+            ReportTypeEnum::PDF => GeneratePdf::new().create(transactions),
             _ => Err("There is no handled format"),
         }
     }
 }
 
 pub trait CreateReport {
+    const BASE_PATH: &str = "/tmp/";
     fn create(&self, items: Vec<Transaction>) -> Result<ReportDataResponse, &'static str>;
 }
 
